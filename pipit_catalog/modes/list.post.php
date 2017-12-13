@@ -1,7 +1,7 @@
 <?php
     # Main panel
 	echo $HTML->title_panel([
-    'heading' => $Lang->get('Catalog'),
+    'heading' => $Lang->get('Product Catalog'),
     'button'  => [
             'text' => $Lang->get('Add a Product'),
             'link' => $productsURL.'/product/edit/',
