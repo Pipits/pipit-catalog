@@ -1,6 +1,6 @@
 <?php
 	if ($CurrentUser->logged_in() && $CurrentUser->has_priv('pipit_catalog')) {
-		$this->register_app('pipit_catalog', 'Catalog', 5, 'Catalog App', '1.0.0');
+		$this->register_app('pipit_catalog', 'Catalog', 5, 'Catalog App', '1.1.0');
 		$this->require_version('pipit_catalog', '3.0');
 		
 		$this->add_setting('pipit_catalog_productsSet', 'Products Category Set', 'PerchCategories_Sets::get_settings_select_list', false);

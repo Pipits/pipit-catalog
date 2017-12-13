@@ -8,7 +8,7 @@
 	$Paging = $API->get('Paging');
 	
     # Set the page title
-    $Perch->page_title = $Lang->get('Catalog app');
+    $Perch->page_title = $Lang->get('Manage Products');
 
     include('modes/_subnav.php');
 	
