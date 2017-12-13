@@ -12,8 +12,6 @@
 
     if (isset($message)) echo $message;
 	
-	
-	
 
 	$persist_args = '';
 	$ParentSmartbar = new PerchSmartbar($CurrentUser, $HTML, $Lang);
@@ -39,7 +37,6 @@
 			'arg'    => 'q',
 			'icon'   => 'core/search',
 			'position' => 'end',
-			//'persist' => ['category', 'brand', 'status', 'sale', 'shipping'],
 		]);
 	}
 
@@ -54,7 +51,7 @@
 	
 
 
-	/* Filters */
+	# Filters 
 	// form->start()
 	echo '<form method="get" action="'.$API->app_path().'" class="app form-simple pipit-filters">';
 	
@@ -157,7 +154,7 @@
 	
     
 	
-	if($products)
+	if($products_for_paging)
 	{
 		$Listing = new PerchAdminListing($CurrentUser, $HTML, $Lang, $Paging);
 		
@@ -204,7 +201,7 @@
 					global $API;
 					$noImg = '<img class="listing__thumb" src="'.$API->app_path().'/assets/images/no-image.png'.'" />';
 					
-					if($dynamic_fields['image'])
+					if(isset($dynamic_fields['image']))
 					{
 						$image = $dynamic_fields['image'];
 						
@@ -260,13 +257,20 @@
 		
 		$Listing->add_col([
 			'title'     => 'Stock',
+			'sort' => 'stock_level',
 			'value'     => function($Item) {
-				
 				$dynamic_fields = PerchUtil::json_safe_decode($Item->productDynamicFields(), true);
-					
+				$stock_location = $stock_status = '';
+				if(isset($dynamic_fields['stock_location']))
+				{
 					$stock_location = $dynamic_fields['stock_location'];
+				}
+				if(isset($dynamic_fields['stock_status']))
+				{
 					$stock_status = $dynamic_fields['stock_status'];
-					
+				}
+
+
 				if($stock_location == '0')
 				{
 					global $productsPATH;
@@ -300,30 +304,36 @@
 					return $stock;					
 				}
 			},
-			'sort' => 'stock_level',
 		]);
-			
 
+
+
+		$sort_price = 'price';
 		$displaySale = false;
 		if($Settings->get('pipit_catalog_displaySalePrices')->val())
 		{
 			$displaySale = true;
+			if(isset($_GET['sale']) && $_GET['sale'] === 'true')
+			{
+				$sort_price = 'sale_price';
+			}
 		}
 		
 		$Listing->add_col([
-			'title'     => 'Price',
-			'value'     => function($Item) use ($HTML) {
+			'title' => 'Price',
+			'sort' => $sort_price,
+			'value' => function($Item) use ($HTML) {
 				global $displaySale;
 				
-					//$prices = $Item->price();
-					$dynamic_fields = PerchUtil::json_safe_decode($Item->productDynamicFields(), true);
-					
-					$prices = $dynamic_fields['price'];
-					$onSale = $dynamic_fields['on_sale'];
-					if($onSale && $displaySale)
-					{					 
-						$prices = $dynamic_fields['sale_price'];
-					}
+				//$prices = $Item->price();
+				$dynamic_fields = PerchUtil::json_safe_decode($Item->productDynamicFields(), true);
+				
+				$prices = $dynamic_fields['price'];
+				$onSale = $dynamic_fields['on_sale'];
+				if($onSale && $displaySale)
+				{					 
+					$prices = $dynamic_fields['sale_price'];
+				}
 					
 				if (PerchUtil::count($prices)) {
 					if (isset($prices['_default'])) unset($prices['_default']);    

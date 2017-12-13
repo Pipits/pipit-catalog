@@ -15,6 +15,7 @@
 	$ShopAPI    = new PerchAPI(1, 'perch_shop');
 	$ProductsAPI    = new PerchAPI(1, 'perch_shop_products');
 
+
 	$Products   = new PerchShop_Products($ShopAPI);
 	$Brands   = new PerchShop_Brands($ShopAPI);
 	$brands = $Brands->all();
@@ -40,7 +41,8 @@
 	
 	//defaults
 	$selected_status = $selected_shipping = $selected_sale = $selected_catID = $selected_brandID = '';
-	$filter = 'products';
+	$sort_id = 'title';
+	$sort_order = 'ASC';
 	$filters = [];
 	$listing_opts = ['return-objects' => true,];
 	
@@ -119,6 +121,28 @@
 				'value' => $selected_brandID,
 			];
 	}
+
+	if (isset($_GET['sort']) && $_GET['sort'] != '') 
+	{
+		if(substr($_GET['sort'], 0, 1) === '^')
+		{
+			$sort_id = substr($_GET['sort'], 1);
+			$sort_order = 'ASC';
+		}
+		else
+		{
+			$sort_id = $_GET['sort'];
+			$sort_order = 'DESC';
+		}
+
+		if($sort_id === 'price' || $sort_id === 'stock')
+		{
+			$listing_opts['sort-type'] = 'numeric';	
+		}
+	}
+	
+	$listing_opts['sort'] = $sort_id;
+	$listing_opts['sort-order'] = $sort_order;
 	
 	
 	if (isset($_GET['q']) && $_GET['q']!='') 
@@ -141,7 +165,6 @@
 	
 	
 	
-	
 	$listing_opts['filter'] = $filters;
 	if(count($filters) > 1)
 	{
@@ -149,28 +172,24 @@
 	}
  
 	
-	//handle paging, is there a better way?
-	$Paging->set_total(count($Products->get_filtered_listing($listing_opts, true)));
-	
-	$listing_opts['paginate'] = true;
-	$listing_opts['count'] = $per_page;
-	//sort options
-	//$listing_opts['sort'] = 'sku';
-	//$listing_opts['sort-order'] = 'ASC';
-	
-	$products = $Products->get_filtered_listing($listing_opts, true);
-	if($products)
+	$where_callback = function (PerchQuery $Query)
+    {
+    	$Query->where[] =  'productDeleted IS NULL';
+    	$Query->where[] = 'parentID IS NULL';
+        return $Query;
+	};
+
+	$products_for_paging = $Products->get_filtered_listing($listing_opts, $where_callback);
+	if($products_for_paging)
 	{
-		foreach($products as $productKey => $product)
-		{
-			if($product->productDeleted())
-			{
-				unset($products[$productKey]);
-			}
-		}
+		$listing_opts['paginate'] = true;
+		$listing_opts['count'] = $per_page;
+		
+		
+		$products = $Products->get_filtered_listing($listing_opts, $where_callback, true);
+		$Paging->set_total(count($products_for_paging));
 	}
 	else
 	{
 		$search_message = $HTML->warning_message('No matching products found.');
 	}
-	
