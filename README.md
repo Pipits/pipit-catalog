@@ -50,3 +50,15 @@ If your thumb doesn't have the `density` attribute, leave the field empty in the
 
 ### Other options
 You can choose to hide some filters, the search field and the products' thumbs if they are not useful to you.
+
+
+## Displaying products in order
+To display the products on your website in the same order you define through the Catalog app, you need to set your sort options:
+
+```
+perch_shop_products([
+    'sort' => 'productOrder',
+    'sort-type' => 'numeric',
+    'sort-order' => 'ASC'
+]);
+```

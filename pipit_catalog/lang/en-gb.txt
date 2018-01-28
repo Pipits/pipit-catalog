@@ -48,5 +48,17 @@
     "Thumb crop": "Thumb crop",
     "No matching products found.": "No matching products found.",
     "Sorted ascending": "Sorted ascending",
-    "Sorted descending": "Sorted descending"
+    "Sorted descending": "Sorted descending",
+    "Manage Products": "Manage Products",
+    "Add the Products Set in the %ssettings%s to enable Category filtering": "Add the Products Set in the %ssettings%s to enable Category filtering",
+    "Product Catalog": "Product Catalog",
+    "Products: Reorder Products": "Products: Reorder Products",
+    "Drag and drop the Products to reorder them.": "Drag and drop the Products to reorder them.",
+    "Listing all Products": "Listing all Products",
+    "Reorder": "Reorder",
+    "Save Changes": "Save Changes",
+    "or": "or",
+    "Cancel": "Cancel",
+    "Product orders successfully updated.": "Product orders successfully updated.",
+    "Order": "Order"
 }
