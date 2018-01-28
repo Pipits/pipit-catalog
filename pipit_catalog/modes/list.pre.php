@@ -8,6 +8,8 @@
 	$Paging = $API->get('Paging');
 	$Paging->set_per_page($per_page);
 	
+	$Helper = new PipitCatalog_Helper();
+
 	$PerchAPI    = new PerchAPI(1.0, 'core');
     $PerchCategories = new PerchCategories_Categories($PerchAPI);
 	$PerchSets = new PerchCategories_Sets($PerchAPI);
@@ -15,11 +17,10 @@
 	$ShopAPI    = new PerchAPI(1, 'perch_shop');
 	$ProductsAPI    = new PerchAPI(1, 'perch_shop_products');
 
-
 	$Products   = new PerchShop_Products($ShopAPI);
 	$Brands   = new PerchShop_Brands($ShopAPI);
 	$brands = $Brands->all();
-	
+
 	$URL = $API->app_nav();
 	$productsURL = $ProductsAPI->app_nav();
 	$productsPATH = $ProductsAPI->app_path();
@@ -41,7 +42,8 @@
 	
 	//defaults
 	$selected_status = $selected_shipping = $selected_sale = $selected_catID = $selected_brandID = '';
-	$sort_id = 'title';
+	$sort_id = 'productOrder';
+	$sort_type = 'numeric';
 	$sort_order = 'ASC';
 	$filters = [];
 	$listing_opts = ['return-objects' => true,];
@@ -112,6 +114,7 @@
 	}
 	
 	
+
 	if (isset($_GET['brand']) && $_GET['brand'] != '') 
 	{
 		$selected_brandID = $_GET['brand'];
@@ -122,6 +125,8 @@
 			];
 	}
 
+
+	
 	if (isset($_GET['sort']) && $_GET['sort'] != '') 
 	{
 		if(substr($_GET['sort'], 0, 1) === '^')
@@ -135,16 +140,22 @@
 			$sort_order = 'DESC';
 		}
 
-		if($sort_id === 'price' || $sort_id === 'stock')
+		if($sort_id === 'price' || $sort_id === 'stock' || $sort_id === 'status')
 		{
-			$listing_opts['sort-type'] = 'numeric';	
+			$sort_type = 'numeric';	
+		}
+		else
+		{
+			$sort_type = 'alpha';
 		}
 	}
 	
 	$listing_opts['sort'] = $sort_id;
 	$listing_opts['sort-order'] = $sort_order;
+	$listing_opts['sort-type'] = $sort_type;
 	
 	
+
 	if (isset($_GET['q']) && $_GET['q']!='') 
 	{
 	    $term = $_GET['q'];
@@ -156,6 +167,7 @@
 	}
 	
 	
+
 	if (isset($_GET['category']) && $_GET['category'] != '') 
 	{
 		$cat = $PerchCategories->find($_GET['category'], true);

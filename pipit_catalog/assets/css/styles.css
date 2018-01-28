@@ -10,6 +10,11 @@ table td
 	max-height: 100px;
 }
 
+.reorder_list .listing__thumb
+{
+	margin-right: 20px;
+}
+
 .listing__warning
 {
 	background: #caa820;
