@@ -1,7 +1,12 @@
 <?php
 
-    $HTML = $API->get('HTML');
 	$Settings = $API->get('Settings');
+
+	if ($Settings->get('pipit_catalog_update')->val()!=PIPIT_CATALOG_VERSION) {
+    	PerchUtil::redirect($API->app_path().'/update/');
+	}
+	
+	$HTML = $API->get('HTML');
 	$Form = $API->get('Form');
 	
 	$per_page = 24;

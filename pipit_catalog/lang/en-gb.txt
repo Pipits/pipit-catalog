@@ -60,5 +60,6 @@
     "or": "or",
     "Cancel": "Cancel",
     "Product orders successfully updated.": "Product orders successfully updated.",
-    "Order": "Order"
+    "Order": "Order",
+    "Access the Catalog app": "Access the Catalog app"
 }
