@@ -28,4 +28,9 @@
 		$Settings = $API->get('Settings');
 		
 		$this->add_create_page('catalog_app', 'list');
+
+
+        $app_path = $API->app_path();
+        $Perch = Perch::fetch();
+        $Perch->add_javascript("$app_path/assets/js/product_preview.js");
 	}
