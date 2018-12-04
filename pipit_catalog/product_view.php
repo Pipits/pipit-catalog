@@ -10,26 +10,20 @@
     $ShopAPI    = new PerchAPI(1, 'perch_shop');
     $Products   = new PerchShop_Products($ShopAPI);
     $Settings = $API->get('Settings');
-    
-    
-    $Collection  = false;
-    
-    $item_id = $product_url = false;
+    $product_url = false;
 
-    // Find the collection
-    
+    // find product
     if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-        
         $id = (int) $_GET['id'];
         $Product = $Products->find($id);
 
         $product_url = $Settings->get('perch_shop_product_url')->val();
-
-        
         $product_url = preg_replace_callback('/{([A-Za-z0-9_\-]+)}/', '_replace_vars', $product_url);
         
 
         $view_page_url = rtrim($Settings->get('siteURL')->val(), '/').$product_url;
+        
+        // inactive
         if($Product->status() == '1') {
             PerchSystem::redirect($view_page_url);
         }
