@@ -6,7 +6,12 @@
     $API  = new PerchAPI(1.0, 'pipit_catalog');
 	$HTML   = $API->get('HTML');
 	$Lang   = $API->get('Lang');
-	$Paging = $API->get('Paging');
+    $Paging = $API->get('Paging');
+    $Settings = $API->get('Settings');
+
+	if ($Settings->get('pipit_catalog_update')->val()!=PIPIT_CATALOG_VERSION) {
+    	PerchUtil::redirect($API->app_path().'/update/');
+	}
 	
     # Set the page title
     $Perch->page_title = $Lang->get('Manage Products');
