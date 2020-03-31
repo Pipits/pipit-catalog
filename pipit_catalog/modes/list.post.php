@@ -1,8 +1,8 @@
 <?php
     # Main panel
 	echo $HTML->title_panel([
-    'heading' => $Lang->get('Product Catalog'),
-    'button'  => [
+    	'heading' => $Lang->get('Product Catalog'),
+    	'button'  => [
 			'text' => $Lang->get('Add a Product'),
 			'link' => $productsURL.'/product/edit/',
 			'icon' => 'core/plus',
@@ -14,149 +14,9 @@
 	
 
 	$persist_args = '';
-	$ParentSmartbar = new PerchSmartbar($CurrentUser, $HTML, $Lang);
+	include(__DIR__.'/list.smartbar.php');
+	include(__DIR__.'/list.filters_smartbar.php');
 	
-	
-	if (!isset($smartbar_selection)) $smartbar_selection = 'products';
-	$ParentSmartbar->add_item([
-        'active' => $smartbar_selection=='products',
-        'title' => $Lang->get('Products'),
-        'link'  => $URL,
-        'icon'  => 'ext/o-shirt',
-    ]);
-
-	
-    if(!$Settings->get('pipit_catalog_hideSearch')->val()) {
-		$ParentSmartbar->add_item([
-			'active' => false,
-			'type'   => 'search',
-			'title'  => 'Search',
-			'arg'    => 'q',
-			'icon'   => 'core/search',
-			'position' => 'end',
-		]);
-	}
-
-	$ParentSmartbar->add_item([
-		'title' => $Lang->get('Clear filters'),
-		'link'  => $URL,
-		'icon'    => 'core/circle-delete',
-		'position' => 'end',
-	]);
-
-	$ParentSmartbar->add_item([
-        'title' => $Lang->get('Reorder'),
-        'link'  => $API->app_nav().'/reorder/',
-        'icon'  => 'core/menu',
-        'position' => 'end',
-    ]);
-
-    echo $ParentSmartbar->render();
-	
-
-
-	# Filters 
-	// form->start()
-	echo '<form method="get" action="'.$API->app_path().'" class="app form-simple pipit-filters">';
-	
-		if(!$Settings->get('pipit_catalog_hideCat')->val() && $Settings->get('pipit_catalog_productsSet')->val() && PerchUtil::count($Categories)) 
-		{
-			$cat_opts = [];
-			$cat_opts[] = ['value' => '', 'label' => ''];
-			foreach($Categories as $Category) {
-				$catID = $Category->catID();
-				$setID = $Category->setID();
-				
-				$cat_opts[] = [
-					'value' => $catID,
-					'setID' => $setID,
-					'label' => $Category->catTitle(),
-				];
-			}
-			
-			echo $Form->select_field('category', 'Categories', $cat_opts, $selected_catID, 'pipit-filters__choices');
-		}
-		
-		
-		if(!$Settings->get('pipit_catalog_hideBrand')->val() && PerchUtil::count($brands)) 
-		{
-			$brand_opts = [];
-			$brand_opts[] = ['value' => '', 'label' => ''];
-			foreach($brands as $brand) {
-				$brandID = $brand->brandID();
-				
-				$brand_opts[] = [
-					'value' => $brandID,
-					'brandID' => $brandID,
-					'title' => $brand->brandTitle(),
-					'label' => $brand->brandTitle(),
-				];
-			}
-			
-			echo $Form->select_field('brand', 'Brands', $brand_opts, $selected_brandID, 'pipit-filters__choices');
-		}
-		
-	
-		if(!$Settings->get('pipit_catalog_hideStatus')->val())
-		{
-			$status_opts = [];
-			$status_opts[] = ['value' => '', 'label' => ''];
-			
-			$status_opts[] = [
-				'label' => 'Inactive',
-				'value' => 'false',
-			];
-			$status_opts[] = [
-				'label' => 'Active',
-				'value' => 'true',
-			];
-			
-			echo $Form->select_field('active', 'Status', $status_opts, $selected_status, 'pipit-filters__choices');
-		}
-				
-		
-		if(!$Settings->get('pipit_catalog_hideSale')->val())
-		{		
-			$sale_opts = [];
-			$sale_opts[] = ['value' => '', 'label' => ''];
-			
-			$sale_opts[] = [
-				'label' => 'Yes',
-				'value' => 'true',
-			];
-			$sale_opts[] = [
-				'label' => 'No',
-				'value' => 'false',
-			];
-			
-			echo $Form->select_field('sale', 'On Sale', $sale_opts, $selected_sale, 'pipit-filters__choices');
-		}
-		
-		
-		if(!$Settings->get('pipit_catalog_hideShipping')->val())
-		{
-			$shipping_opts = [];
-			$shipping_opts[] = ['value' => '', 'label' => ''];
-			
-			$shipping_opts[] = [
-				'label' => 'Required',
-				'value' => 'true',
-			];
-			
-			$shipping_opts[] = [
-				'label' => 'No Shipping',
-				'value' => 'false',
-			];
-			
-			echo $Form->select_field('shipping', 'Shipping', $shipping_opts, $selected_shipping, 'pipit-filters__choices');
-		}
-	
-	
-		echo '<div class="submit-bar-actions"><input type="submit" id="btnSubmit" value="Filter" class="button button-simple"></div>';
-    echo $Form->form_end();
-	
-	
-    
 	
 	
 
