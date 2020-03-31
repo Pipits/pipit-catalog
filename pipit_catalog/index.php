@@ -5,7 +5,8 @@
     
     $API  = new PerchAPI(1.0, 'pipit_catalog');
 	$HTML   = $API->get('HTML');
-	$Lang   = $API->get('Lang');
+    $Lang   = $API->get('Lang');
+    $Form = $API->get('Form');
     $Paging = $API->get('Paging');
     $Settings = $API->get('Settings');
 

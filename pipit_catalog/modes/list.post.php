@@ -17,9 +17,7 @@
 	$ParentSmartbar = new PerchSmartbar($CurrentUser, $HTML, $Lang);
 	
 	
-	if (!isset($smartbar_selection)) {
-		$smartbar_selection = 'products';
-	}
+	if (!isset($smartbar_selection)) $smartbar_selection = 'products';
 	$ParentSmartbar->add_item([
         'active' => $smartbar_selection=='products',
         'title' => $Lang->get('Products'),
@@ -28,8 +26,7 @@
     ]);
 
 	
-    if(!$Settings->get('pipit_catalog_hideSearch')->val())
-	{
+    if(!$Settings->get('pipit_catalog_hideSearch')->val()) {
 		$ParentSmartbar->add_item([
 			'active' => false,
 			'type'   => 'search',
@@ -161,17 +158,15 @@
 	
     
 	
-	if($products_for_paging)
-	{
-		$Listing = new PerchAdminListing($CurrentUser, $HTML, $Lang, $Paging);
+	
+
+	
+	$Listing = new PerchAdminListing($CurrentUser, $HTML, $Lang, $Paging);
 		
-		if(!$Settings->get('pipit_catalog_hideProductImages')->val())
-		{
+		if(!$Settings->get('pipit_catalog_hideProductImages')->val()) {
 			$Listing->add_col([
 				'title'     => 'Image',
-				'value'     => function($Item)
-				{
-					global $Helper, $API, $Settings;
+				'value'     => function($Item) use($Helper, $API, $Settings) {
 					return $Helper->get_product_image($Item, $API, $Settings);
 				},
 			]);
@@ -200,51 +195,30 @@
 		$Listing->add_col([
 			'title'     => 'Stock',
 			'sort' => 'stock_level',
-			'value'     => function($Item) {
+			'value'     => function($Item) use($productsPATH, $Settings) {
 				$dynamic_fields = PerchUtil::json_safe_decode($Item->productDynamicFields(), true);
 				$stock_location = $stock_status = '';
-				if(isset($dynamic_fields['stock_location']))
-				{
-					$stock_location = $dynamic_fields['stock_location'];
-				}
-				if(isset($dynamic_fields['stock_status']))
-				{
-					$stock_status = $dynamic_fields['stock_status'];
-				}
 
+				if(isset($dynamic_fields['stock_location'])) $stock_location = $dynamic_fields['stock_location'];
+				if(isset($dynamic_fields['stock_status'])) $stock_status = $dynamic_fields['stock_status'];
+				
 
-				if($stock_location == '0')
-				{
-					global $productsPATH;
-						
-					return '<a href="'.$productsPATH.'/product/variants/?id='.$Item->productID().'" class="primary">On variants</a>';
+				if($stock_location == '0') return '<a href="'.$productsPATH.'/product/variants/?id='.$Item->productID().'" class="primary">On variants</a>';
+				if($stock_status == '0') return 'Unlimited';
+				if($stock_status == '5') return 'Discontinued';
+				
+				
+				$css ='';
+				$stock = (int)$Item->stock_level();
+				
+				if($stock_status == '3' || $stock == 0) {
+					$css = "listing__alert";
+				} else if($stock <= (int)$Settings->get('pipit_catalog_lowStok')->val() || $stock_status == '2') {
+					$css = "listing__warning";
 				}
-				else if($stock_status == '0')
-				{
-					return 'Unlimited';
-				}
-				else if($stock_status == '5')
-				{
-					return 'Discontinued';
-				}
-				else
-				{
-					global $Settings;
-					$css ='';
-					$stock = (int)$Item->stock_level();
-					
-					if($stock_status == '3' || $stock == 0)
-					{
-						$css = "listing__alert";
-					}
-					else if($stock <= (int)$Settings->get('pipit_catalog_lowStok')->val() || $stock_status == '2')
-					{
-						$css = "listing__warning";
-					}
-					
-					$stock = '<span class='.$css.'>'.$stock.'</span>';
-					return $stock;					
-				}
+				
+				$stock = '<span class='.$css.'>'.$stock.'</span>';
+				return $stock;
 			},
 		]);
 
@@ -252,57 +226,47 @@
 
 		$sort_price = 'price';
 		$displaySale = false;
-		if($Settings->get('pipit_catalog_displaySalePrices')->val())
-		{
+		if($Settings->get('pipit_catalog_displaySalePrices')->val()) {
 			$displaySale = true;
-			if(isset($_GET['sale']) && $_GET['sale'] === 'true')
-			{
-				$sort_price = 'sale_price';
-			}
+			if($selected_sale === 'true') $sort_price = 'sale_price';
+			
 		}
 		
 		$Listing->add_col([
 			'title' => 'Price',
 			'sort' => $sort_price,
-			'value' => function($Item) use ($HTML) {
-				global $displaySale;
-				
+			'value' => function($Item) use ($displaySale, $ProductsAPI) {
 				//$prices = $Item->price();
 				$dynamic_fields = PerchUtil::json_safe_decode($Item->productDynamicFields(), true);
 				
 				$prices = $dynamic_fields['price'];
 				$onSale = $dynamic_fields['on_sale'];
-				if($onSale && $displaySale)
-				{					 
-					$prices = $dynamic_fields['sale_price'];
-				}
+				if($onSale && $displaySale) $prices = $dynamic_fields['sale_price'];
+				
 					
 				if (PerchUtil::count($prices)) {
-					if (isset($prices['_default'])) unset($prices['_default']);    
-					global $ProductsAPI;
+					if (isset($prices['_default'])) unset($prices['_default']);
 					$Currencies = new PerchShop_Currencies($ProductsAPI);
 					$out = [];
 					$pre = $post = '';
 
-					if($onSale && $displaySale)
-					{
+					if($onSale && $displaySale) {
 						$pre = '<span class="listing__sale">';
 						$post = '</span>';
 					}
 					
+
 					foreach($prices as $currencyID=>$price) {
 						
 						$Currency = $Currencies->find((int)$currencyID);
 						if ($Currency) {
-							if($price == 0)
-							{
+							if($price == 0) {
 								$out[] = '<span class="listing__alert">'.$Currency->get_formatted($price).'</span>';
-							}
-							else
-							{
+							} else {
 								$out[] = $Currency->get_formatted($price);
 							}
 						}
+
 					}
 					
 					return $pre.implode(', ', $out).$post;
@@ -317,18 +281,12 @@
 		$Listing->add_col([
 			'title' => 'Active',
 			'sort' => 'status',
-			'value' => function($Item){
+			'value' => function($Item) {
 				$dynamic_fields = PerchUtil::json_safe_decode($Item->productDynamicFields(), true);
 				$status = $dynamic_fields['status'];
 					
-				if($status == '0')
-				{
-					return PerchUI::icon('core/cancel', 16, null, 'icon-status-alert');
-				}
-				else
-				{
-					return PerchUI::icon('core/circle-check', 16, null, 'icon-status-success');
-				}
+				if($status == '0') return PerchUI::icon('core/cancel', 16, null, 'icon-status-alert');
+				return PerchUI::icon('core/circle-check', 16, null, 'icon-status-success');
 			},
 		]);
 			
@@ -342,10 +300,16 @@
 
 
 		
+	
+
+
+
+
+
+
+
+	if($products_for_paging) {
 		echo $Listing->render($products);
-	}
-	else
-	{
+	} else {
 		echo $search_message;
 	}
-?>
