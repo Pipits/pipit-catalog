@@ -2,7 +2,7 @@
     # include the API
     include('../../../../core/inc/api.php');
     
-    $API  = new PerchAPI(1.0, 'pipit_auto_form_export');
+    $API  = new PerchAPI(1.0, 'pipit_catalog');
     $HTML   = $API->get('HTML');
     $Lang   = $API->get('Lang');
     $Paging = $API->get('Paging');

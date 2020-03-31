@@ -30,24 +30,6 @@ This only works when the stock count is central for the product. This option is 
 When an item is on sale, you can choose to display the sale price instead of the regular price. When this option is enabled, sale prices are highlighted.
 
 
-### Product thumb
-Perch generates thumbs for images uploaded via the Assets uploader by default. The app uses these thumbs, but you can configure it to use other versions if they exist.
-
-In the settings you have fields for `width`, `height`, `density` and `crop`. Leave these options empty if you are happy with the default thumbs.
-
-
-The default product template `product.html` generates thumbs with `width="80" height="80" density="1.6" crop="true"`:
-
-```markup
-<perch:shop id="image" type="image" label="Main product image" order="4" width="800" />
-<perch:shop id="image" type="image" width="80" height="80" density="1.6" crop="true" />
-```
-
-You can use the square 80x80 version by entering the thumbs' details in the settings.
-
-If your thumb doesn't have the `density` attribute, leave the field empty in the settings. If it doesn't have the `crop` attribute, leave it unchecked.
-
-
 ### Other options
 You can choose to hide some filters, the search field and the products' thumbs if they are not useful to you.
 
