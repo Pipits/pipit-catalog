@@ -40,10 +40,18 @@
 
                 if(!$Settings->get('pipit_catalog_hideProductImages')->val())
 		        {
-                    echo $Helper->get_product_image($Product, $API, $Settings);
-                }
-                else
-                {
+                    $no_img = '<img class="listing__thumb" src="'.$API->app_path().'/assets/images/no-image.png'.'" alt="Preview: no image" />';
+					$dynamic_fields = PerchUtil::json_safe_decode($Product->productDynamicFields(), true);
+
+					$Tag = $Template->find_tag('image');
+					if(!$Tag || !isset($dynamic_fields['image'])) {
+                        echo $no_img;
+                    } else {
+                        $FieldType = PerchFieldTypes::get('image', false, $Tag);
+                        echo $FieldType->render_admin_listing($dynamic_fields['image']);
+                    }
+
+                } else {
                     echo PerchUI::icon('ext/o-shirt');
                 }
 

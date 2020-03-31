@@ -1,7 +1,6 @@
 <?php
     # includes
     include('../../../../core/inc/api.php');
-    include('../lib/PipitCatalog_Helper.class.php');
 
     $API  = new PerchAPI(1.0, 'pipit_catalog');
     $Lang = $API->get('Lang');

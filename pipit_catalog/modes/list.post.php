@@ -26,8 +26,15 @@
 		if(!$Settings->get('pipit_catalog_hideProductImages')->val()) {
 			$Listing->add_col([
 				'title'     => 'Image',
-				'value'     => function($Item) use($Helper, $API, $Settings) {
-					return $Helper->get_product_image($Item, $API, $Settings);
+				'value'     => function($Item) use($API, $Template) {
+					$no_img = '<img class="listing__thumb" src="'.$API->app_path().'/assets/images/no-image.png'.'" alt="Preview: no image" />';
+					$dynamic_fields = PerchUtil::json_safe_decode($Item->productDynamicFields(), true);
+
+					$Tag = $Template->find_tag('image');
+					if(!$Tag || !isset($dynamic_fields['image'])) return $no_img;
+
+					$FieldType = PerchFieldTypes::get('image', false, $Tag);
+					return $FieldType->render_admin_listing($dynamic_fields['image']);
 				},
 			]);
 		}

@@ -7,8 +7,8 @@
 	$Products   = new PerchShop_Products($ShopAPI);
 	$Brands   = new PerchShop_Brands($ShopAPI);
 
-
-	$Helper = new PipitCatalog_Helper();
+	$Template   = $ShopAPI->get('Template');
+	$Template->set('shop/products/product.html', 'shop');
 
 	$per_page = 24;
 	$Paging->set_per_page($per_page);
