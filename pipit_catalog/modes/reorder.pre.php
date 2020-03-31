@@ -6,6 +6,7 @@
     $Settings = $API->get('Settings');
     $Helper = new PipitCatalog_Helper();
 
+    $Template   = $ShopAPI->get('Template');
     $Template->set('shop/products/product.html', 'shop');
 
     $Form = $API->get('Form');

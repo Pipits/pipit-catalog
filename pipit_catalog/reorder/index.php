@@ -4,7 +4,6 @@
     include('../lib/PipitCatalog_Helper.class.php');
 
     $API  = new PerchAPI(1.0, 'pipit_catalog');
-    $Template   = $API->get('Template');
     $Lang = $API->get('Lang');
     $HTML = $API->get('HTML');
     $Paging = $API->get('Paging');
