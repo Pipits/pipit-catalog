@@ -19,11 +19,6 @@
 		$this->add_setting('pipit_catalog_hideProductImages', 'Hide product images', 'checkbox', false);
 		$this->add_setting('pipit_catalog_displaySalePrices', 'Display sale prices', 'checkbox', false);
 		
-		$this->add_setting('pipit_catalog_thumbW', 'Thumb width', 'text', false);
-		$this->add_setting('pipit_catalog_thumbH', 'Thumb height', 'text', false);
-		$this->add_setting('pipit_catalog_thumbDensity', 'Thumb density', 'text', false);
-		$this->add_setting('pipit_catalog_thumbCrop', 'Thumb crop', 'checkbox', false);
-		
 		$API  = new PerchAPI(1.0, 'pipit_catalog');
 		$Settings = $API->get('Settings');
 		
