@@ -21,9 +21,6 @@
 		
 		$API  = new PerchAPI(1.0, 'pipit_catalog');
 		$Settings = $API->get('Settings');
-		
-		$this->add_create_page('catalog_app', 'list');
-
 
         $app_path = $API->app_path();
         $Perch = Perch::fetch();
