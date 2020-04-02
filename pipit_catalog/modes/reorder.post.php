@@ -6,24 +6,10 @@
         'heading' => $Lang->get('Listing all Products'),
     ], $CurrentUser);
 
-    $Smartbar = new PerchSmartbar($CurrentUser, $HTML, $Lang);
+    include(__DIR__.'/list.smartbar.php');
 
-    $Smartbar->add_item([
-        'active' => false,
-        'title' => $Lang->get('Products'),
-        'link'  => $API->app_nav(),
-        'icon'  => 'ext/o-shirt',
-    ]);
 
-    $Smartbar->add_item([
-        'active' => true,
-        'title' => $Lang->get('Reorder'),
-        'link'  => $API->app_nav().'/reorder/',
-        'icon'  => 'core/menu',
-        'position' => 'end',
-    ]);
-
-    echo $Smartbar->render();
+    
     
     if (PerchUtil::count($products)) 
     {

@@ -4,9 +4,9 @@
     $Products   = new PerchShop_Products($ShopAPI);
     $Settings = $API->get('Settings');
     
-
     $Template   = $ShopAPI->get('Template');
     $Template->set('shop/products/product.html', 'shop');
+    $smartbar_selection = 'reorder';
 
     $Form = $API->get('Form');
 
