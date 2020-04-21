@@ -39,7 +39,8 @@ $ParentSmartbar = new PerchSmartbar($CurrentUser, $HTML, $Lang);
         'title' => $Lang->get('Reorder'),
         'link'  => $API->app_nav().'/reorder/',
         'icon'  => 'core/menu',
-        'position' => 'end',
+		'position' => 'end',
+		'priv' => 'pipit_catalog.reorder'
 	]);
 	
 	$ParentSmartbar->add_item([
@@ -47,7 +48,8 @@ $ParentSmartbar = new PerchSmartbar($CurrentUser, $HTML, $Lang);
         'title' => $Lang->get('Republish'),
         'link'  => $API->app_nav().'/republish/',
         'icon'  => 'core/documents',
-        'position' => 'end',
+		'position' => 'end',
+		'priv' => 'pipit_catalog.republish'
     ]);
 
 echo $ParentSmartbar->render();
