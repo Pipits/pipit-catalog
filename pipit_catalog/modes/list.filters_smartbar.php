@@ -1,17 +1,22 @@
 <?php
 echo '<form method="get" action="'.$API->app_path().'" class="app form-simple pipit-filters">';
 
-	if(!$Settings->get('pipit_catalog_hideCat')->val() && $Settings->get('pipit_catalog_productsSet')->val() && PerchUtil::count($Categories)) {
-		$cat_opts = [];
-		$cat_opts[] = ['value' => '', 'label' => ''];
-		foreach($Categories as $Category) {
-			$cat_opts[] = [
-				'value' => $Category->catID(),
-				'label' => $Category->catTitle(),
-			];
+	if(!$Settings->get('pipit_catalog_hideCat')->val() && PerchUtil::count($category_groups)) {
+		$group_opts = [];
+		$group_opts[''] = [ ['value' => '', 'label' => ''] ];
+
+		foreach($category_groups as $key => $categories) {
+			$group_opts[$key] = [];
+
+			foreach($categories as $Category) {
+				$group_opts[$key][] = [
+					'value' => $Category->catID(),
+					'label' => $Category->catDisplayPath(),
+				];
+			}
 		}
 		
-		echo $Form->select_field('category', 'Categories', $cat_opts, $selected_catID, 'pipit-filters__choices');
+		echo $Form->grouped_select_field('category', 'Categories', $group_opts, $selected_catID, 'pipit-filters__choices');
 	}
 	
 	

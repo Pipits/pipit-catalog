@@ -18,18 +18,17 @@
 	$URL = $API->app_nav();
 	$productsURL = $ProductsAPI->app_nav();
 	$productsPATH = $ProductsAPI->app_path();
-	
 
 
-	
-	if($Settings->get('pipit_catalog_productsSet')->val()) {
-		$setID = $Settings->get('pipit_catalog_productsSet')->val();
-		$Set = $PerchSets->find($setID, true);
-		$setSlug = $Set->setSlug();
-		
-		$Categories = $PerchCategories->get_for_set($setSlug);
-	} else {
-		$message = $HTML->warning_message('Add the Products Set in the %ssettings%s to enable Category filtering', '<a class="go progress-link" href="'.PERCH_LOGINPATH.'/core/settings/#pipit_catalog">', '</a>');
+	$category_groups = [];
+	$category_sets = PipitCatalog_Util::get_product_category_sets();
+
+	foreach($category_sets as $set) {
+		$Set = $PerchSets->get_one_by('setSlug', $set);
+		if(!is_object($Set)) continue;
+
+		$cats = $PerchCategories->get_for_set($set);
+		if(PerchUtil::count($cats)) $category_groups[$Set->setTitle()] = $cats;
 	}
 	
 	

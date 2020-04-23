@@ -5,7 +5,6 @@
 		$this->register_app('pipit_catalog', 'Catalog', 5, 'Catalog App', PIPIT_CATALOG_VERSION);
 		$this->require_version('pipit_catalog', '3.0');
 		
-		$this->add_setting('pipit_catalog_productsSet', 'Products Category Set', 'PerchCategories_Sets::get_settings_select_list', false);
 		
 		$this->add_setting('pipit_catalog_lowStok', 'Highlight low stock when stock', 'text', false);
 		
@@ -18,11 +17,12 @@
 		
 		$this->add_setting('pipit_catalog_hideProductImages', 'Hide product images', 'checkbox', false);
 		$this->add_setting('pipit_catalog_displaySalePrices', 'Display sale prices', 'checkbox', false);
+
+
 		
 		$API  = new PerchAPI(1.0, 'pipit_catalog');
-		$Settings = $API->get('Settings');
-
-        $app_path = $API->app_path();
         $Perch = Perch::fetch();
-        $Perch->add_javascript("$app_path/assets/js/product_preview.js");
+		$Perch->add_javascript($API->app_path() . "/assets/js/product_preview.js");
+
+		include('lib/PipitCatalog_Util.class.php');
 	}

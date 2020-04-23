@@ -65,5 +65,7 @@
     "Opps": "Opps",
     "The product URL is not set, or the product could not be found.": "The product URL is not set, or the product could not be found.",
     "Product Inactive": "Product Inactive",
-    "The product status is set to inactive. Inactive products cannot be viewed on the site.": "The product status is set to inactive. Inactive products cannot be viewed on the site."
+    "The product status is set to inactive. Inactive products cannot be viewed on the site.": "The product status is set to inactive. Inactive products cannot be viewed on the site.",
+    "Update Pipit Catalog": "Update Pipit Catalog",
+    "Republish": "Republish"
 }
