@@ -34,6 +34,48 @@ $ParentSmartbar = new PerchSmartbar($CurrentUser, $HTML, $Lang);
 
 	
 
+	if($smartbar_selection == 'reorder') {
+		$ParentSmartbar->add_item([
+			'active' => true,
+            'type' => 'toggle',
+            'arg'    => 'context',
+            'options' => [
+                [
+                    'title' => 'All',
+                    'value' => '',
+                    'icon' => '',
+                ],
+                [
+                    'title' => 'Category',
+                    'value' => 'cat',
+                    'icon' => ''
+				],
+				[
+                    'title' => 'Brand',
+                    'value' => 'brand',
+                    'icon' => ''
+				],
+            ]
+		]);
+		
+
+
+		
+		switch($view) {
+			case 'cat_detail':
+				include(__DIR__.'/_reorder.category.smartbar.php');
+			break;
+
+			case 'brand_detail':
+				include(__DIR__.'/_reorder.brand.smartbar.php');
+			break;
+		}
+	}
+
+
+	
+	
+
 	$ParentSmartbar->add_item([
 		'active' => $smartbar_selection=='reorder',
         'title' => $Lang->get('Reorder'),
@@ -42,6 +84,7 @@ $ParentSmartbar = new PerchSmartbar($CurrentUser, $HTML, $Lang);
 		'position' => 'end',
 		'priv' => 'pipit_catalog.reorder'
 	]);
+	
 	
 	$ParentSmartbar->add_item([
 		'active' => $smartbar_selection=='republish',

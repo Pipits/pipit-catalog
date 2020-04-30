@@ -21,13 +21,10 @@
 
 
 	$category_groups = [];
-	$category_sets = PipitCatalog_Util::get_product_category_sets();
+	$category_sets = PipitCatalog_Products::get_category_sets();
 
-	foreach($category_sets as $set) {
-		$Set = $PerchSets->get_one_by('setSlug', $set);
-		if(!is_object($Set)) continue;
-
-		$cats = $PerchCategories->get_for_set($set);
+	foreach($category_sets as $Set) {
+		$cats = $PerchCategories->get_for_set($Set->setSlug());
 		if(PerchUtil::count($cats)) $category_groups[$Set->setTitle()] = $cats;
 	}
 	

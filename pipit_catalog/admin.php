@@ -24,5 +24,5 @@
         $Perch = Perch::fetch();
 		$Perch->add_javascript($API->app_path() . "/assets/js/product_preview.js");
 
-		include('lib/PipitCatalog_Util.class.php');
+		include_once('lib/PipitCatalog_Products.class.php');
 	}

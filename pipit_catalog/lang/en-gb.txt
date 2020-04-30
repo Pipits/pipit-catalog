@@ -67,5 +67,14 @@
     "Product Inactive": "Product Inactive",
     "The product status is set to inactive. Inactive products cannot be viewed on the site.": "The product status is set to inactive. Inactive products cannot be viewed on the site.",
     "Update Pipit Catalog": "Update Pipit Catalog",
-    "Republish": "Republish"
+    "Republish": "Republish",
+    "All": "All",
+    "Category": "Category",
+    "Products: Republish Products": "Products: Republish Products",
+    "Republishing Products": "Republishing Products",
+    "Are you sure you wish to republish all Products?": "Are you sure you wish to republish all Products?",
+    "Republish Products?": "Republish Products?",
+    "Brand": "Brand",
+    "No products found in this brand": "No products found in this brand",
+    "No products found in this category.": "No products found in this category."
 }

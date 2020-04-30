@@ -1,6 +1,12 @@
 <?php
+    
+    if(PerchUtil::get('success')) {
+        $Alert->set('success', $Lang->get('Product orders successfully updated.'));
+    }
 
-    $Alert->set('info', $Lang->get('Drag and drop the Products to reorder them.'));
+    if(!in_array($view, ['cat_list', 'brand_list'])) {
+        $Alert->set('info', $Lang->get('Drag and drop the Products to reorder them.'));
+    }
 
     echo $HTML->title_panel([
         'heading' => $Lang->get('Listing all Products'),
@@ -9,47 +15,52 @@
     include(__DIR__.'/list.smartbar.php');
 
 
+    switch($view) {
+        case 'cat_list':
+            foreach($category_groups as $key => $category_group) {
+                echo '<h2 class="divider"><div>' . $key .'</div></h2>';
+
+                $Listing = new PerchAdminListing($CurrentUser, $HTML, $Lang, $Paging);
     
-    
-    if (PerchUtil::count($products)) 
-    {
+                $Listing->add_col([
+                    'title'     => 'Category',
+                    'value'     => 'catDisplayPath',
+                    'edit_link' => $API->app_path() .'/reorder/?context=cat&catID=',
+                    'icon'      => 'core/chart-pie',
+                    'depth'     => function($item){
+                        return (int)$item->catDepth()-1;
+                    },
+                ]);
 
-        echo '<div class="inner">';
-        echo $Form->form_start('reorder', 'reorder');
-        
-        echo '<ol class="reorder_list basic-sortable sortable-tree">';
+                echo $Listing->render($category_group);
+            }
 
-        foreach($products as $Product) 
-        {
-            echo '<li><div>';
-                echo '<input type="text" name="p-'.$Product->productID().'" value="'.$Product->productOrder().'" />';
+        break;
 
-                if(!$Settings->get('pipit_catalog_hideProductImages')->val())
-		        {
-                    $no_img = '<img class="listing__thumb" src="'.$API->app_path().'/assets/images/no-image.png'.'" alt="Preview: no image" />';
-					$dynamic_fields = PerchUtil::json_safe_decode($Product->productDynamicFields(), true);
 
-					$Tag = $Template->find_tag('image');
-					if(!$Tag || !isset($dynamic_fields['image'])) {
-                        echo $no_img;
-                    } else {
-                        $FieldType = PerchFieldTypes::get('image', false, $Tag);
-                        echo $FieldType->render_admin_listing($dynamic_fields['image']);
-                    }
+        case 'brand_list':
+            $Listing = new PerchAdminListing($CurrentUser, $HTML, $Lang, $Paging);
 
-                } else {
-                    echo PerchUI::icon('ext/o-shirt');
-                }
+            $Listing->add_col([
+                'title'     => 'Brand',
+                'value'     => 'title',
+                'edit_link' => $API->app_path() .'/reorder/?context=brand&brandID=',
+            ]);
 
-                echo $HTML->encode($Product->title()).'</div>';
-            echo '</li>';    
-        }
+            echo $Listing->render($brands);
+        break;
 
-        echo '</ol>';
 
-        echo $Form->hidden('orders', '');
-        echo $Form->submit_field('reorder', 'Save Changes', $API->app_path());
 
-        echo $Form->form_end();
-        echo '</div>';
+
+        case 'cat_detail':
+            include(__DIR__.'/_reorder.category.php');
+        break;
+
+        case 'brand_detail':
+            include(__DIR__.'/_reorder.brand.php');
+        break;
+
+        default:
+            include(__DIR__.'/_reorder.default.php');
     }
