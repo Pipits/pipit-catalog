@@ -5,6 +5,7 @@ The Catalog App provides an alternative listing page to your Shop Products with 
 - Download the latest version of the Catalog App.
 - Unzip the download
 - Place the `pipit_catalog` folder in `perch/addons/apps`
+- Add `pipit_catalog` to your runtime apps list in `perch/config/apps.php`
 
 
 ### Requirements
@@ -34,13 +35,47 @@ When an item is on sale, you can choose to display the sale price instead of the
 You can choose to hide some filters, the search field and the products' thumbs if they are not useful to you.
 
 
-## Displaying products in order
+
+## Reordering products
+
+You can reorder the products in 3 contexts:
+1. Globally
+2. Within a category (beta)
+3. Within a brand (beta)
+
+### Displaying products in global order
 To display the products on your website in the same order you define through the Catalog app, you need to set your sort options:
 
-```
+```php
 perch_shop_products([
     'sort' => 'productOrder',
     'sort-type' => 'numeric',
     'sort-order' => 'ASC'
+]);
+```
+
+
+### Displaying products in category order
+
+```php
+pipit_catalog_products('category', 'products/shoes/', [
+    'template' => 'products/list.html'
+]);
+```
+
+You can exclude products from sub-categories:
+
+```php
+pipit_catalog_products('category', 'products/shoes/', [
+    'template' => 'products/list.html',
+    'sub-categories' => false,
+]);
+```
+
+### Displaying products in brand order
+
+```php
+pipit_catalog_products('brand', 'brand-slug', [
+    'template' => 'products/list.html'
 ]);
 ```
