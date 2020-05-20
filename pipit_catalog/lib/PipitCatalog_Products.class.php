@@ -250,6 +250,20 @@ class PipitCatalog_Products {
                         if($return_instances) {
                             return $Products->get_filtered_listing($instance_opts, $where_callback, true);
                         } else {
+
+                            if(!$opts['sub-categories']) {
+                                unset($opts['category']);
+                                $cat_filter = ['filter' => '_category', 'value' => $Category->catPath()];
+                                
+                                $opts = $this->_filters_to_array($opts);
+                                $opts['filter'][] = $cat_filter;
+
+                                if(count($opts['filter']) > 1) {
+                                    $opts['filter-mode'] = 'ungrouped';
+                                }
+                            }
+
+
                             return perch_shop_products($opts);
                         }
 
@@ -258,9 +272,15 @@ class PipitCatalog_Products {
 
                 case 'brand':
                     if(is_object($Brand)) {
+                        $opts = $this->_filters_to_array($opts);
+                        $instance_opts = $this->_filters_to_array($instance_opts);
                         $opts['filter'][] = $instance_opts['filter'][] = ['filter' => 'brand', 'value' => $Brand->id()];
 
-
+                        if(count($opts['filter']) > 1) {
+                            $opts['filter-mode'] = 'ungrouped';
+                            $instance_opts['filter-mode'] = 'ungrouped';
+                        }
+                        
                         if($return_instances) {
                             return $Products->get_filtered_listing($instance_opts, $where_callback, true);
                         } else {
@@ -401,6 +421,30 @@ class PipitCatalog_Products {
 
 
 
+    /**
+     * 
+     */
+    private function _filters_to_array($opts) {
+        if (isset($opts['filter']) && (isset($opts['value']) || is_array($opts['filter']))) {
+            if (!is_array($opts['filter']) && isset($opts['value'])) {
+                $opts['filter'] = [
+                    [
+                        'filter'     => $opts['filter'],
+                        'value'      => $opts['value'],
+                        'match'      => (isset($opts['match']) ? $opts['match'] : 'eq'),
+                    ]
+                ];
+
+
+                unset($opts['match'], $opts['value']);
+            }
+        }
+
+
+
+        return $opts;
+    }
+
 
     /**
      * 
@@ -411,24 +455,8 @@ class PipitCatalog_Products {
         $Query  = new PerchQuery();
         $filters = [];
 
-
-        if (isset($opts['filter']) && (isset($opts['value']) || is_array($opts['filter']))) {
-            if (!is_array($opts['filter']) && isset($opts['value'])) {
-                $filters = [
-                    [
-                        'filter'     => $opts['filter'],
-                        'value'      => $opts['value'],
-                        'match'      => (isset($opts['match']) ? $opts['match'] : 'eq'),
-                    ]
-                ];
-            }else{
-                $filters = $opts['filter'];
-            }
-        }
-
-
-
-
+        $opts = $this->_filters_to_array($opts);
+        if(isset($opts['filter'])) $filters = $opts['filter'];
 
 
         foreach($filters as $filter) {
